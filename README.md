@@ -31,9 +31,9 @@ Safari → https://engob.github.io/RunForest/ → Partager → **Sur l'écran d'
 ```bash
 npm install
 npm run dev      # http://localhost:5173/RunForest/
-npm run build
+npm run build    # génère le site dans docs/
 ```
 
 Stack : Vite, React 19, TypeScript, Tailwind CSS 4, Leaflet (tuiles CARTO dark), vite-plugin-pwa, IndexedDB.
 
-Déploiement : GitHub Actions → GitHub Pages à chaque push sur `main` (Settings › Pages › Source : **GitHub Actions**).
+Déploiement : GitHub Pages sert directement le dossier `docs/` (Settings › Pages › Deploy from a branch › `main` / `/docs`). Après une modif : `npm run build`, puis commit du dossier `docs/`.

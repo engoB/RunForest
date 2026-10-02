@@ -5,6 +5,8 @@ import type { TrackPoint } from '../lib/types'
 
 export const TILE_URL = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
 export const TILE_ATTR = '&copy; OpenStreetMap &copy; CARTO'
+// transparent pixel shown when a tile cannot load (offline / no signal)
+export const ERROR_TILE = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
 
 interface Props {
   size: number
@@ -46,8 +48,9 @@ export default function Radar({ size, pos, heading, rotate, points, ghost, ghost
       zoomAnimation: false,
       markerZoomAnimation: false,
       inertia: false,
+      preferCanvas: true,
     }).setView(pos ? [pos.lat, pos.lng] : [48.8566, 2.3522], zoom)
-    L.tileLayer(TILE_URL, { subdomains: 'abcd', maxZoom: 20, detectRetina: true }).addTo(m)
+    L.tileLayer(TILE_URL, { subdomains: 'abcd', maxZoom: 20, detectRetina: true, errorTileUrl: ERROR_TILE }).addTo(m)
     ghostLine.current = L.polyline([], { color: '#a78bfa', weight: 3, opacity: 0.45, dashArray: '4 6' }).addTo(m)
     track.current = L.polyline([], { color: '#ffb020', weight: 5, opacity: 0.95, lineCap: 'round' }).addTo(m)
     startMk.current = L.circleMarker([0, 0], { radius: 5, color: '#000', weight: 2, fillColor: '#7cfc6b', fillOpacity: 1 })
@@ -102,10 +105,11 @@ export default function Radar({ size, pos, heading, rotate, points, ghost, ghost
 
   return (
     <div className="flex flex-col items-center gap-1.5" style={{ width: size }}>
+      <div className="relative rounded-full" style={{ width: size, height: size, boxShadow: '0 0 0 3px #000, 0 0 0 5px rgba(255,255,255,.18), 0 10px 30px rgba(0,0,0,.6)' }}>
       <div
         onClick={onClick}
-        className="relative overflow-hidden rounded-full"
-        style={{ width: size, height: size, boxShadow: '0 0 0 3px #000, 0 0 0 5px rgba(255,255,255,.18), 0 10px 30px rgba(0,0,0,.6)' }}
+        className="absolute inset-0 isolate overflow-hidden rounded-full bg-[#0b0f14]"
+        style={{ clipPath: 'circle(50% at 50% 50%)', WebkitClipPath: 'circle(50% at 50% 50%)' }}
       >
         <div
           className="absolute"
@@ -117,6 +121,8 @@ export default function Radar({ size, pos, heading, rotate, points, ghost, ghost
             transform: `rotate(${mapRot}deg)`,
             transition: 'transform .8s ease-out',
             filter: 'saturate(1.3) hue-rotate(-12deg) brightness(1.15)',
+            clipPath: `circle(${size / 2}px at 50% 50%)`,
+            WebkitClipPath: `circle(${size / 2}px at 50% 50%)`,
           }}
         >
           <div ref={innerRef} className="h-full w-full" />
@@ -134,12 +140,13 @@ export default function Radar({ size, pos, heading, rotate, points, ghost, ghost
         </div>
         {/* north marker */}
         <div className="pointer-events-none absolute inset-0" style={{ transform: `rotate(${mapRot}deg)`, transition: 'transform .8s ease-out' }}>
-          <div className="absolute left-1/2 top-1 grid h-5 w-5 -translate-x-1/2 place-items-center rounded-full bg-black text-[10px] font-black text-white ring-1 ring-white/40" style={{ transform: `translateX(-50%) rotate(${-mapRot}deg)` }}>
+          <div className="absolute left-1/2 top-1 grid h-5 w-5 -translate-x-1/2 place-items-center rounded-full bg-black text-[10px] font-black text-white ring-1 ring-white/40" style={{ transform: `translateX(-50%) rotate(${-mapRot}deg)`, transition: 'transform .8s ease-out' }}>
             N
           </div>
         </div>
         {!pos && <div className="absolute inset-0 grid place-items-center bg-black/50 text-center text-[11px] font-semibold uppercase tracking-widest text-white/70">Recherche
           <br />GPS…</div>}
+      </div>
       </div>
       {bars && (
         <div className="flex w-[86%] gap-1">

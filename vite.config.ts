@@ -7,6 +7,8 @@ const base = '/RunForest/'
 
 export default defineConfig({
   base,
+  // built site goes to docs/ so GitHub Pages can serve it directly (Settings › Pages › main /docs)
+  build: { outDir: 'docs', emptyOutDir: true },
   plugins: [
     react(),
     tailwindcss(),

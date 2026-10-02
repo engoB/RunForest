@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import type { TrackPoint } from '../lib/types'
-import { TILE_ATTR, TILE_URL } from './Radar'
+import { ERROR_TILE, TILE_ATTR, TILE_URL } from './Radar'
 
 interface Props {
   points: TrackPoint[]
@@ -46,7 +46,7 @@ export default function RunMap({ points, ghostRoute, ghost, pos, colorByPace, fo
   useEffect(() => {
     if (!el.current) return
     const m = L.map(el.current, { zoomControl: false, attributionControl: true, preferCanvas: true }).setView([48.8566, 2.3522], 15)
-    L.tileLayer(TILE_URL, { subdomains: 'abcd', maxZoom: 20, attribution: TILE_ATTR, detectRetina: true }).addTo(m)
+    L.tileLayer(TILE_URL, { subdomains: 'abcd', maxZoom: 20, attribution: TILE_ATTR, detectRetina: true, errorTileUrl: ERROR_TILE }).addTo(m)
     layer.current = L.layerGroup().addTo(m)
     dyn.current = L.layerGroup().addTo(m)
     map.current = m

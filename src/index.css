@@ -1,0 +1,55 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Anton", "Impact", sans-serif;
+  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
+  --color-ink: #05070a;
+  --color-panel: #0d1117;
+  --color-neon: #7cfc6b;
+  --color-amber: #ffb020;
+  --color-ghost: #a78bfa;
+  --color-hot: #ff3b5c;
+  --color-ice: #38bdf8;
+}
+
+html, body, #root {
+  height: 100%;
+  background: var(--color-ink);
+  color: #e6edf3;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+body { font-family: var(--font-sans); }
+input, textarea, select { -webkit-user-select: text; user-select: text; font-size: 16px; }
+
+.pt-safe { padding-top: max(env(safe-area-inset-top), 12px); }
+.pb-safe { padding-bottom: max(env(safe-area-inset-bottom), 10px); }
+.tabular { font-variant-numeric: tabular-nums; }
+.text-shadow-hud { text-shadow: 0 2px 0 #000, 0 0 12px rgba(0,0,0,.6); }
+.hud-stroke { -webkit-text-stroke: 1px #000; paint-order: stroke fill; }
+
+.scan::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: repeating-linear-gradient(0deg, rgba(255,255,255,.025) 0 1px, transparent 1px 3px);
+}
+
+@keyframes sweep { to { transform: rotate(360deg); } }
+.radar-sweep { animation: sweep 4s linear infinite; }
+@keyframes pop { 0% { transform: scale(.6); opacity: 0 } 60% { transform: scale(1.08); opacity: 1 } 100% { transform: scale(1) } }
+.pop { animation: pop .5s cubic-bezier(.2,.9,.3,1.3) both; }
+@keyframes pulse-ring { 0% { box-shadow: 0 0 0 0 rgba(124,252,107,.6) } 100% { box-shadow: 0 0 0 18px rgba(124,252,107,0) } }
+.pulse-ring { animation: pulse-ring 1.6s ease-out infinite; }
+@keyframes slide-down { from { transform: translateY(-120%); } to { transform: translateY(0); } }
+.slide-down { animation: slide-down .35s ease-out both; }
+
+.leaflet-container { isolation: isolate; z-index: 0; background: #0b0f14 !important; font-family: var(--font-sans); }
+.leaflet-control-attribution { background: rgba(0,0,0,.5) !important; color: #8b949e !important; font-size: 9px !important; }
+.leaflet-control-attribution a { color: #8b949e !important; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+@keyframes slide-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+.slide-up { animation: slide-up .28s cubic-bezier(.2,.8,.2,1) both; }
+@keyframes fade-in { from { opacity: 0 } to { opacity: 1 } }
+.fade-in { animation: fade-in .3s ease both; }
